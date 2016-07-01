@@ -1,14 +1,25 @@
 angular.module('olympics.services')
-  .factory('Refs', ['$cookies', '$firebase',
-    function($cookies, $firebase) {
-      var rootRef = new Firebase($cookies.rootRef || 'YOUR_FIREBASE_URL');     
-      
-      // define every standard ref used application wide
+  .factory('Refs', ['$cookies', '$firebaseAuth',
+    function($cookies, $firebaseAuth) {
+      let config = {
+        apiKey: $cookies.get('apiKey'),
+        authDomain: $cookies.get('authDomain'),
+        databaseURL: $cookies.get('databaseURL'),
+        storageBucket: $cookies.get('storageBucket'),
+      }
+
+      var app = firebase.initializeApp(config);
+
+      var db = app.database()
+
       return {
-        root: rootRef,
-        users: rootRef.child('users'),
-        competitions: rootRef.child('competitions'),
-        bot_olympics: rootRef.child('competitions').child('Bot Olympics'),
+        root: db.ref(),
+        users: db.ref('users'),
+        competitions: db.ref('competitions'),
+        iothackathon: db.ref('competitions/iothackathon'),
+        _auth: function() {
+          return $firebaseAuth(app.auth())
+        }
       };
     }
   ]);

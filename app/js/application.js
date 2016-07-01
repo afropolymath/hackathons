@@ -13,57 +13,53 @@ require('./services/http.requests.js');
 // loading controller
 require('./controllers/mainCtrl.js');
 
-window.Olympics = angular.module('Olympics', [
-	'ngRoute',
+var Olympics = angular.module('Olympics', [
+	'ui.router',
 	'ngCookies',
 	'firebase',
 	'olympics.controllers',
 	'olympics.services'
 ]);
 
-Olympics.config(['$routeProvider','$locationProvider',
-	function($routeProvider, $locationProvider) {
+Olympics.config(['$stateProvider','$urlRouterProvider', '$locationProvider',
+	function($stateProvider, $urlRouterProvider, $locationProvider) {
 		$locationProvider.html5Mode(true);
-		$routeProvider
-			.when('/', {
+		$stateProvider
+			.state('home', {
+        url: '/',
 				templateUrl: 'views/home.html',
 				controller: 'mainCtrl'
 			})
-			.otherwise({
-				templateUrl: '404.html'
-			});
+      .state('404', {
+        url: '/404',
+        templateUrl: '404.html'
+      });
+
+    $urlRouterProvider.otherwise('/404');
 	}]);
 
 Olympics.run(['$rootScope', 'Authentication', 'Refs',
   function($rootScope, Authentication, Refs) {
-  	Refs.root.onAuth(function(authData) {
-  		if(authData) {
-  			var user = {
-          uid: authData.uid,
-          name: authData.google.displayName,
-          email: authData.google.email,
-          accessToken: authData.google.accessToken,
-          picture: authData.google.cachedUserProfile.picture
+    Refs._auth().$onAuthStateChanged(function(firebaseUser) {
+      if(!firebaseUser) {
+        Authentication.logout()
+      } else {
+        var user = {
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName,
+          email: firebaseUser.email,
+          accessToken: firebaseUser.refreshToken,
+          picture: firebaseUser.photoURL
         };
-  			$rootScope.currentUser = user;
-  			return $rootScope.currentUser;
-  		}
-      else {
-      	Authentication.logout();
+        $rootScope.currentUser = user;
+        return $rootScope.currentUser;
       }
     });
   }]);
 
-
-
-
-
-
-
-
 $(function() {
-	$('.how-link').on('click', function() {
+	$('a.details-link').on('click', function() {
 		console.log("Clicked");
-		$('.overlay').scrollTo('.content.how', 800);
+		$('.overlay').scrollTo('.competition-details', 800);
 	});
 });
