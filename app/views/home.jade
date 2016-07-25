@@ -41,14 +41,14 @@ include ../shared/layout
           .transparent-card
             .content
               .image
-              .title Most Innovative
-              p This goes to the most innovative app
+              .title Best Solution Prize
+              p This goes to the solution that best addresses a real problem
         .col.s12.m6.l6
           .transparent-card
             .content
               .image
-              .title Most Innovative
-              p This goes to the most innovative app
+              .title IoT Prize
+              p For the solution that best leverages hardware to interact with the physical world
   .team-details
     .fg-container
       h2.center-align.header Teams
@@ -79,8 +79,6 @@ include ../shared/layout
               .card-action.right-align(ng-if='currentUser')
                 a.waves-effect.waves-light.waves-ripple(href='#' ng-click='joinTeam(team_id)' ng-hide='currentUser.uid === team_id')
                   i.material-icons person_add
-                a.waves-effect.waves-light.waves-ripple(href='#' ng-click='registerTeam(team_id)' ng-if='currentUser.uid === team_id')
-                  i.material-icons send
       .row
         .col.s12
           a.btn-floating.btn-large.waves-effect.waves-light.red.modal-trigger.btn.tooltipped(href='#create-team-modal' data-tooltip="Create a Team" data-position="right" data-delay="50")
